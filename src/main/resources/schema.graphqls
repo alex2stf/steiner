@@ -1,0 +1,32 @@
+type File {
+    id: ID
+    name: String
+    path: String
+    mimeType: String
+    status: String
+}
+
+type Document {
+    id: ID
+    status: String
+    type: String
+    description: String
+    code: String
+    productId: Int
+    phase: String
+    reason: String
+    source: String
+    product: String
+}
+
+
+type Query {
+    filesByTags(tags: [String]): [File]
+    documentsByProductIdAndStatus(productId: Int, status: String) : [Document]
+    documentsByProductIdAndStatusAndPhase(productId: Int, status: String, phase: String) : [Document]
+}
+
+
+#TODO::::
+#type BankingQueries
+#type MyOtherQueries

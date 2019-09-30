@@ -1,0 +1,15 @@
+nbproject/
+build/
+.settings/
+.cproject
+bin/
+projects/
+src/.DS_Store
+docker/.DS_Store
+/Debug
+/lib
+/arch
+*.iml
+/target
+nohup.out
+.DS_Store

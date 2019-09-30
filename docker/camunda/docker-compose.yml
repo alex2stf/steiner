@@ -1,0 +1,7 @@
+version: '2'
+services:
+  rabbit1:
+    image: "camunda/camunda-bpm-platform:latest"
+    ports:
+      - "8080:8080"
+
