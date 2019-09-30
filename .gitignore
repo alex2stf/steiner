@@ -13,3 +13,4 @@ docker/.DS_Store
 /target
 nohup.out
 .DS_Store
+.idea
