@@ -6,10 +6,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.UUID;
+
 @Component
 @ComponentScan
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = true, ignoreInvalidFields = true)
 public class ApplicationProperties {
+
+  public static final String APP_ID = UUID.randomUUID().toString();
 
   String user;
   String password;

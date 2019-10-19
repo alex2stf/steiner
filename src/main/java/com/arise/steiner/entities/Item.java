@@ -20,8 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import org.hibernate.annotations.Where;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * A Item.
@@ -277,7 +275,7 @@ public class Item extends BasicEntity implements Serializable {
     @Override
     public String toString() {
         return "Item{" +
-            "uploadUser=" + getUserId() +
+            "uploadUser=" + getCreatedBy() +
             ", name='" + name + '\'' +
             ", size=" + size +
             ", mimeType='" + mimeType + '\'' +

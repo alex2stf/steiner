@@ -1,7 +1,6 @@
 package com.arise.steiner.client;
 
 import com.arise.steiner.names.Routes;
-import com.arise.steiner.dto.CreateNodeRequest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

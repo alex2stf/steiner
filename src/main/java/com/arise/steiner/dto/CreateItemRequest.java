@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 public class CreateItemRequest {
 
 
+    private String nodeId;
     private String name;
     private Long size;
     private String mimeType;
@@ -21,6 +22,14 @@ public class CreateItemRequest {
     private String status;
     private String userId;
     private String userDomain;
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
     public String getUserId() {
         return userId;

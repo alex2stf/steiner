@@ -14,6 +14,7 @@
 
 
 
+
     <properties>
         <spring.boot.version>2.1.6.RELEASE</spring.boot.version>
         <graphql.version>2019-04-08T02-06-59-636f7b5</graphql.version>
@@ -26,6 +27,25 @@
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.arise</groupId>
+            <artifactId>canter</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/canter-1.0.jar</systemPath>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.15</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -155,11 +175,28 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-spring-boot-starter</artifactId>
+            <version>4.1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-server-connector</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_2.12</artifactId>
+            <version>2.5.11</version>
         </dependency>
 
         <!--<dependency>-->
@@ -190,6 +227,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-test</artifactId>
+            <version>4.1.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -335,6 +379,8 @@
                 </dependency>
             </dependencies>
         </profile>
+
+
 
 
 

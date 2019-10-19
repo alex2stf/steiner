@@ -1,13 +1,19 @@
 package com.arise.steiner.services.impl;
 
+import com.arise.steiner.Mapper;
+import com.arise.steiner.client.UpdateNodeRequest;
+import com.arise.steiner.cqrs.commands.CreateNodeCmd;
+import com.arise.steiner.cqrs.commands.PatchNodeCmd;
+import com.arise.steiner.dto.User;
 import com.arise.steiner.entities.Node;
-import com.arise.steiner.dto.CreateNodeRequest;
+import com.arise.steiner.client.CreateNodeRequest;
 import com.arise.steiner.dto.CustomMapper;
 import com.arise.steiner.errors.EmptyNodeException;
 import com.arise.steiner.errors.EntityNotFoundException;
 import com.arise.steiner.errors.ErrorKey;
 import com.arise.steiner.repository.NodesRepository;
 import com.arise.steiner.repository.ItemRepository;
+import com.arise.steiner.services.EventSourceService;
 import com.arise.steiner.services.IDService;
 import com.arise.steiner.services.NodesService;
 import com.arise.steiner.services.FilteringService;
@@ -22,6 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.arise.core.tools.CollectionUtil.isEmpty;
+import static com.arise.steiner.Mapper.createdNodeEvent;
+import static com.arise.steiner.Mapper.updateNodeEvent;
 
 
 /**
@@ -39,48 +49,45 @@ public class NodesServiceImpl implements NodesService {
 
     private final IDService idService;
 
+    private final EventSourceService eventSourceService;
+
 
     public NodesServiceImpl(NodesRepository nodesRepository,
-        ItemRepository itemRepository, FilteringService filteringService, HistoryService historyService, IDService idService) {
+                            ItemRepository itemRepository, FilteringService filteringService, HistoryService historyService, IDService idService, EventSourceService eventSourceService) {
         this.nodesRepository = nodesRepository;
         this.itemRepository = itemRepository;
         this.filteringService = filteringService;
         this.historyService = historyService;
         this.idService = idService;
+        this.eventSourceService = eventSourceService;
     }
 
     @Transactional
     @Override
-    public Node createNode(CreateNodeRequest createNodeRequest, String user, String userDomain) {
-        Node node = new Node();
-        node.setDescription(createNodeRequest.getDescription());
-        node.setType(createNodeRequest.getType());
-        node.setReason(createNodeRequest.getReason());
-        node.setProductId(createNodeRequest.getProductId());
-        node.setPhase(createNodeRequest.getPhase());
-        node.setSource(createNodeRequest.getSource());
-        node.setStatus(createNodeRequest.getStatus());
-        node.setProduct(createNodeRequest.getProduct());
-        node.setCode(createNodeRequest.getCode());
-        node.setUserId(user);
-        node.setUserDomain(userDomain);
-        node.setCreationDate(new Date());
+    public Node createNode(CreateNodeRequest request, User requestor) {
+        Node node = Mapper.fromRequest(request);
+        node.setCreatedBy(requestor.getName());
         node.setUpdateDate(new Date());
         node.setId(idService.next());
 
+
         CompletableFuture.supplyAsync(() -> {
             nodesRepository.save(node);
+            eventSourceService.send(new CreateNodeCmd(node));
 
             node.setTags(
-                filteringService.validateNodeTags(createNodeRequest.getTags(), node)
+                filteringService.validateNodeTags(request.getTags(), node)
             );
 
             node.setProperties(
-                filteringService.validateNodeProperties(createNodeRequest.getProps(), node)
+                filteringService.validateNodeProperties(request.getProps(), node)
             );
 
-            nodesRepository.save(node);
-            historyService.logCreated(node);
+            if (!isEmpty(node.getTags()) || !isEmpty(node.getProperties())){
+                nodesRepository.save(node);
+                eventSourceService.send(new PatchNodeCmd(node));
+            }
+
             return true;
         });
 
@@ -114,9 +121,7 @@ public class NodesServiceImpl implements NodesService {
             throw new EmptyNodeException(ErrorKey.NO_DOCUMENT_FOUND);
         }
 
-//        Item itemToBeDeleted = fileRepository.findOne(node.getCurrentItem().getId());
-//        itemToBeDeleted.setDeleted(true);
-//        fileRepository.save(itemToBeDeleted);
+
 
         node.setCurrentItem(null);
         nodesRepository.save(node);
@@ -140,6 +145,10 @@ public class NodesServiceImpl implements NodesService {
     }
 
     @Override
+    public void update(Node node, UpdateNodeRequest request) {
+
+    }
+
     public void update(Node node, Map<String, Object> requestMap) {
         historyService.logBeforeUpdate(node);
 

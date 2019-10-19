@@ -1,23 +1,22 @@
 package com.arise.steiner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.core.env.Environment;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.env.Environment;
 
 @SpringBootApplication(exclude = {
         //disable security autoconfiguration
@@ -25,8 +24,8 @@ import org.springframework.core.env.Environment;
         UserDetailsServiceAutoConfiguration.class
     }
 )
-@ComponentScan
-@EnableAutoConfiguration
+//@ComponentScan
+//@EnableAutoConfiguration
 public class Main {
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);
@@ -63,7 +62,6 @@ public class Main {
         log.info(
             "\n----------------------------------------------------------\n\t Config Server: \t{}\n----------------------------------------------------------",
             statusDebug);
-
 
     }
 

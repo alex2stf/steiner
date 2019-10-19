@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8034
 
 spring:
   application:
@@ -43,13 +43,12 @@ spring:
       enabled: false
   http:
     multipart:
-      max-file-size: 50Mb    #DRSStoreResponse-limit
-      max-request-size: 50Mb
+      #max-file-size: 50Mb
+      #max-request-size: 50Mb
   h2:
     console:
       enabled: true
       path: /h2
-      #DRSStoreResponse-limit
 
 info:
     project:
@@ -62,11 +61,14 @@ logging:
     console: "[%date] [%level] [%X{THREAD_ID}] [%X{correlationId}] [%X{UUID}] [%X{TRANSACTION_ID}] [%X{SOURCE_IP}] [%X{HTTP_REQ_METHOD}] [%X{ENDPOINT}] [%X{SOAP_ACTION}] [%X{HTTP_RESP_CODE}] [%logger{10}] [%file:%line] [><[%msg]><] [%ex{full}]%n"
 
 application:
-  security: jwt
+  user: root
+  password: admin
+  secret: my-secret-token-to-change-in-production
+  security-mode: LOOSE
+  enable:
+    debug: true
+    keycloack-login: false
 
-security:
-  basic:
-    enabled: false
 log:
     pattern: "[%date] [%level] [%X{THREAD_ID}] [%X{correlationId}] [%X{UUID}] [%X{TRANSACTION_ID}] [%X{SOURCE_IP}] [%X{HTTP_REQ_METHOD}] [%X{ENDPOINT}] [%X{SOAP_ACTION}] [%X{HTTP_RESP_CODE}] [%logger{10}] [%file:%line] [><[%msg]><] [%ex{full}]%n"
 
@@ -76,3 +78,8 @@ queue-props:
   username: "rabbitmq"
   password: "rabbitmq"
   topicName: "documents-topic"
+
+
+axon:
+  axonserver:
+    servers: "localhost:8124"

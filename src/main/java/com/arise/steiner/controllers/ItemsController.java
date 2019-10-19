@@ -55,7 +55,7 @@ public class ItemsController {
     }
 
 
-    @PostMapping("/files")
+    @PostMapping("/items")
     public ResponseEntity<FileSet> createFile(@RequestBody CreateMultipleItemsRequest createMultipleItemsRequest) throws EntityNotFoundException {
         FileSet response = itemsService.createFiles(createMultipleItemsRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);

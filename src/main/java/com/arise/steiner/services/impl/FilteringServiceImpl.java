@@ -1,8 +1,11 @@
 package com.arise.steiner.services.impl;
 
 
+import com.arise.steiner.cqrs.commands.CreateWordCmd;
+import com.arise.steiner.cqrs.events.WordCreatedEvent;
 import com.arise.steiner.entities.Node;
 import com.arise.steiner.entities.Word;
+import com.arise.steiner.services.EventSourceService;
 import com.arise.steiner.services.FilteringService;
 import com.arise.steiner.entities.NodeProperty;
 import com.arise.steiner.entities.NodeTag;
@@ -18,6 +21,7 @@ import com.arise.steiner.repository.ItemTagRepository;
 import com.arise.steiner.repository.PropertyRepository;
 import com.arise.steiner.repository.TagRepository;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -33,15 +37,18 @@ public class FilteringServiceImpl implements FilteringService {
     private final ItemTagRepository itemTagRepository;
     private final ItemPropertyRepository itemPropertyRepository;
 
+    private final EventSourceService eventSourceService;
+
     public FilteringServiceImpl(TagRepository tagRepository, NodePropertyRepository nodePropertyRepository,
-        NodeTagRepository nodeTagRepository, PropertyRepository propertyRepository,
-        ItemTagRepository itemTagRepository, ItemPropertyRepository itemPropertyRepository) {
+                                NodeTagRepository nodeTagRepository, PropertyRepository propertyRepository,
+                                ItemTagRepository itemTagRepository, ItemPropertyRepository itemPropertyRepository, EventSourceService eventSourceService) {
         this.tagRepository = tagRepository;
         this.nodePropertyRepository = nodePropertyRepository;
         this.nodeTagRepository = nodeTagRepository;
         this.propertyRepository = propertyRepository;
         this.itemTagRepository = itemTagRepository;
         this.itemPropertyRepository = itemPropertyRepository;
+        this.eventSourceService = eventSourceService;
     }
 
 
@@ -55,16 +62,16 @@ public class FilteringServiceImpl implements FilteringService {
 
         for (String s : strings) {
             Word tag = getTag(s);
-//            NodeTag nodeTag = documentTagRepository.findByTagAndNodeId(tag, node.getId());
-//            if (nodeTag == null) {
-//                nodeTag = new NodeTag();
-//                nodeTag.setId(new InfoID());
-//                nodeTag.setNode(node);
-//                nodeTag.setTag(tag);
-//                nodeTag.setCreatedOn(new Date());
-//                documentTagRepository.save(nodeTag);
-//            }
-//            rs.add(nodeTag);
+            NodeTag nodeTag = nodeTagRepository.findByTagAndNodeId(tag, node.getId());
+            if (nodeTag == null) {
+                nodeTag = new NodeTag();
+                nodeTag.setId(new InfoID());
+                nodeTag.setNode(node);
+                nodeTag.setTag(tag);
+                nodeTag.setCreatedOn(new Date());
+                nodeTagRepository.save(nodeTag);
+            }
+            rs.add(nodeTag);
         }
 
         return rs;
@@ -76,6 +83,7 @@ public class FilteringServiceImpl implements FilteringService {
             tag = new Word();
             tag.setValue(s);
             tagRepository.save(tag);
+            eventSourceService.send(new CreateWordCmd(s));
         }
         return tag;
     }

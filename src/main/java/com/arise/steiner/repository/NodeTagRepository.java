@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NodeTagRepository extends JpaRepository<NodeTag, InfoID> {
 
-    NodeTag findByTagAndNodeId(Word tag, Long documentId);
+    NodeTag findByTagAndNodeId(Word tag, String nodeId);
 }

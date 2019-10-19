@@ -87,8 +87,7 @@ public class Snapshot extends BasicEntity implements Serializable  {
         this.setReason(node.getReason());
         this.setPhase(node.getPhase());
         this.setProductId(node.getProductId());
-        this.setUserId(node.getUserId());
-        this.setUserDomain(node.getUserDomain());
+        this.setCreatedBy(node.getCreatedBy());
     }
 
     public String getHistoryAction() {

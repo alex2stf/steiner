@@ -1,8 +1,12 @@
 package com.arise.steiner.services;
 
+import com.arise.steiner.client.UpdateNodeRequest;
+import com.arise.steiner.dto.User;
 import com.arise.steiner.entities.Node;
-import com.arise.steiner.dto.CreateNodeRequest;
+import com.arise.steiner.client.CreateNodeRequest;
 import com.arise.steiner.errors.EntityNotFoundException;
+import scala.collection.script.Update;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +15,7 @@ import java.util.Map;
  */
 public interface NodesService {
 
-    Node createNode(CreateNodeRequest createNodeRequest, String user, String userDomain);
+    Node createNode(CreateNodeRequest createNodeRequest, User requestor);
 
     Node findOne(String id) throws EntityNotFoundException;
 
@@ -23,5 +27,6 @@ public interface NodesService {
 
     List<Node> getMultiples(List<Long> documentsIds);
 
-    void update(Node node, Map<String, Object> requestMap);
+//    void update(Node node, Map<String, Object> requestMap);
+    void update(Node node, UpdateNodeRequest request);
 }

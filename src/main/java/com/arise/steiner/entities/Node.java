@@ -52,16 +52,16 @@ public class Node extends BasicEntity implements Serializable {
   @Column(name = "nd_description")
   private String description;
 
-  @Column(name = "product_name")
+  @Column(name = "nd_pt_name")
   private String product;
 
   @Column(name = "nd_code")
   private String code;
 
-  @Column(name = "product_id")
+  @Column(name = "nd_pt_id")
   private Long productId;
 
-  @Column(name = "phase_name")
+  @Column(name = "nd_phase")
   private String phase;
 
   @Column(name = "nd_reason")
@@ -242,7 +242,7 @@ public class Node extends BasicEntity implements Serializable {
         ", phase='" + phase + '\'' +
         ", reason='" + reason + '\'' +
         ", source='" + source + '\'' +
-        ", owner=" + getUserId() +
+        ", owner=" + getCreatedBy() +
         ", id=" + id +
         '}';
   }

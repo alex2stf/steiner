@@ -98,8 +98,7 @@ public class ItemsServiceImpl implements ItemsService {
         item.setSize(inputFile.getSize());
         item.setNotes("waiting_write");
         item.setCreationDate(new Date());
-        item.setUserId(uploadUser);
-        item.setUserDomain(uploadUserDomain);
+        item.setCreatedBy(uploadUser);
         item.setUpdateDate(new Date());
         itemRepository.save(item);
         return item;
@@ -213,8 +212,7 @@ public class ItemsServiceImpl implements ItemsService {
             f.setPath(request.getPath());
             f.setServiceId(request.getServiceId());
             f.setNotes(request.getNotes());
-            f.setUserId(request.getUserId());
-            f.setUserDomain(request.getUserDomain());
+            f.setCreatedBy(request.getUserId());
             f.setCreationDate(new Date());
             f.setUpdateDate(new Date());
             items.add(f);

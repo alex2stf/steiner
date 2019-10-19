@@ -2,6 +2,7 @@ package com.arise.steiner.services;
 
 import com.arise.steiner.config.ApplicationProperties;
 import com.arise.steiner.dto.User;
+import com.arise.steiner.errors.AuthorRequiredException;
 import com.arise.steiner.errors.SteinerException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -74,8 +75,13 @@ public class AuthorizationDecoder {
 
     if (data != null) {
       user = decodeBearer(data);
-    } else if (payload.startsWith("Basic ")) {
+    }
+    else if (payload.startsWith("Basic ")) {
       user = decodeBasicAuth(payload);
+    }
+
+    if (user == null){
+      throw new AuthorRequiredException(applicationProperties);
     }
     return user;
   }

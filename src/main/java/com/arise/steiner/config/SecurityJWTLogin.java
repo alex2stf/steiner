@@ -39,7 +39,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.GenericFilterBean;
-import sun.plugin.liveconnect.SecurityContextHelper;
 
 @ConditionalOnProperty(value = Props.SECURITY_MODE, havingValue = "JWT_LOGIN")
 @Configuration

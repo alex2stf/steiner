@@ -10,6 +10,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ItemTagRepository extends JpaRepository<ItemTag, InfoID> {
-
     ItemTag findByTagAndItemId(Word tag, Long fileId);
 }

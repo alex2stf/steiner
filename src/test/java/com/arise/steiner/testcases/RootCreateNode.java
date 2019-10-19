@@ -3,7 +3,7 @@ package com.arise.steiner.testcases;
 import com.arise.steiner.IntegrationTest;
 import com.arise.steiner.client.NodeDTO;
 import com.arise.steiner.client.SteinerAPIClient;
-import com.arise.steiner.dto.CreateNodeRequest;
+import com.arise.steiner.client.CreateNodeRequest;
 import org.junit.Assert;
 
 public class RootCreateNode extends AbstractTestCase {

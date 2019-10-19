@@ -1,15 +1,15 @@
 server:
-  port: 8082
+  port: 8033
 
 spring:
   application:
-    name: steiner
+    name: steiner-console
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://127.0.0.1:5432/steinerdb
+    url: jdbc:postgresql://127.0.0.1:5432/postgres
     driver-class-name: org.postgresql.Driver
-    username: steiner
-    password: admin
+    username: postgres
+    password: postgres
     hikari:
       leak-detection-threshold: 10000
       maximum-pool-size: 20
@@ -21,7 +21,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -45,7 +45,7 @@ application:
   user: root
   password: admin
   secret: my-secret-token-to-change-in-production
-  security-mode: LOOSE
+  security-mode: NONE
   enable:
     debug: true
     keycloack-login: false

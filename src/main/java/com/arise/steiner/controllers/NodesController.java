@@ -1,12 +1,13 @@
 package com.arise.steiner.controllers;
 
 
+import com.arise.steiner.client.UpdateNodeRequest;
 import com.arise.steiner.config.Author;
 import com.arise.steiner.dto.User;
 import com.arise.steiner.entities.model.CSVDataStr;
 import com.arise.steiner.entities.Item;
 import com.arise.steiner.entities.Node;
-import com.arise.steiner.dto.CreateNodeRequest;
+import com.arise.steiner.client.CreateNodeRequest;
 import com.arise.steiner.dto.NodeListDTO;
 import com.arise.steiner.dto.NodeMapResponse;
 import com.arise.steiner.dto.FileSet;
@@ -17,6 +18,7 @@ import com.arise.steiner.errors.EmptyNameException;
 import com.arise.steiner.errors.EntityNotFoundException;
 import com.arise.steiner.errors.ErrorKey;
 import com.arise.steiner.names.Routes;
+import com.arise.steiner.services.EventSourceService;
 import com.arise.steiner.services.NodesService;
 import com.arise.steiner.services.ItemsService;
 import io.swagger.annotations.ApiOperation;
@@ -59,6 +61,7 @@ public class NodesController {
     private final ItemsService itemsService;
 
 
+
     public NodesController(NodesService nodesService, ItemsService itemsService) {
         this.nodesService = nodesService;
         this.itemsService = itemsService;
@@ -71,14 +74,39 @@ public class NodesController {
      * @return a new document
      */
     @PostMapping(Routes.NODES)
-    public ResponseEntity<Node> createDocument(@RequestBody CreateNodeRequest createNodeRequest, @Author User owner
-    ) {
-        System.out.println(owner);
-
-        log.debug("REST request to save Node : {}", createNodeRequest);
-        Node node = nodesService.createNode(createNodeRequest, owner.getName(), owner.getDomain());
-        log.debug("REST request to save Node logic complete {}", createNodeRequest);
+    public ResponseEntity<Node> createNode(@RequestBody CreateNodeRequest createNodeRequest, @Author User requestor) {
+        log.debug("request to create node : {}", createNodeRequest);
+        Node node = nodesService.createNode(createNodeRequest, requestor);
+        log.debug("created node {}", node.getId());
         return new ResponseEntity<>(node, HttpStatus.CREATED);
+    }
+
+
+    @PutMapping(Routes.NODES + "/{id}")
+    public ResponseEntity<Node> updateNode(@PathVariable String id, @RequestBody UpdateNodeRequest request) throws EntityNotFoundException {
+        log.debug("REST request to update Node : {}", id);
+        Node node = nodesService.findOne(id);
+        nodesService.update(node, request);
+        return ResponseEntity.ok(node);
+    }
+
+    /**
+     * returns a document by {@link Node#id}
+     */
+    @ApiOperation(value = "used to fetch data about a given node",
+            notes = "used to fetch data about a given node",
+            response = Node.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = InputStreamResource.class),
+            @ApiResponse(code = 404, message = "Node not found", response = EntityNotFoundException.class)
+    }
+    )
+    @GetMapping(Routes.NODES + "/{id}")
+    public ResponseEntity<Node> getNode(@PathVariable String id) throws EntityNotFoundException {
+        log.debug("REST request to get Node : {}", id);
+        Node node = nodesService.findOne(id);
+        log.debug("REST request to get Node logic complete {}", id);
+        return ResponseEntity.ok(node);
     }
 
     /**
@@ -124,33 +152,16 @@ public class NodesController {
     }
 
 
-    /**
-     * returns a document by {@link Node#id}
-     */
-    @ApiOperation(value = "used to fetch data about a given document",
-        notes = "used to fetch data about a given document",
-        response = Node.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success", response = InputStreamResource.class),
-            @ApiResponse(code = 404, message = "Node not found", response = EntityNotFoundException.class)
-        }
-    )
-    @GetMapping("/documents/{id}")
-    public ResponseEntity<Node> getDocument(@PathVariable String id) throws EntityNotFoundException {
-        log.debug("REST request to get Node : {}", id);
-        Node node = nodesService.findOne(id);
-        log.debug("REST request to get Node logic complete {}", id);
-        return ResponseEntity.ok(node);
-    }
 
 
-    @PutMapping("/documents/{id}")
-    public ResponseEntity<Node> updateDocument(@PathVariable String id, @RequestBody Map<String, Object> requestMap ) throws EntityNotFoundException {
-        log.debug("REST request to get Node : {}", id);
-        Node node = nodesService.findOne(id);
-        nodesService.update(node, requestMap);
-        return ResponseEntity.ok(node);
-    }
+
+//    @PutMapping(Routes.NODES + "/{id}")
+//    public ResponseEntity<Node> updateNode(@PathVariable String id, @RequestBody UpdateNodeRequest request ) throws EntityNotFoundException {
+//        log.debug("REST request to update Node : {}", id);
+//        Node node = nodesService.findOne(id);
+//        nodesService.update(node, request);
+//        return ResponseEntity.ok(node);
+//    }
 
     /**
      * returns all the files of the documents
@@ -201,7 +212,7 @@ public class NodesController {
         NodeMapResponse response = new NodeMapResponse();
         response.setMap(new HashMap<>());
         for (Map.Entry<String, CreateNodeRequest> entry : request.entrySet()) {
-            Node node = nodesService.createNode(entry.getValue(), uploadUser, uploadUserDomain);
+            Node node = nodesService.createNode(entry.getValue(),null);
             response.getMap().put(entry.getKey(), node);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);

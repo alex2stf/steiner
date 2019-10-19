@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/graphql")
-@SuppressWarnings("uinused")
+@SuppressWarnings("unused")
 public class GraphQLResource {
 
 

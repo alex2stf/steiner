@@ -22,13 +22,20 @@ public class BasicEntity {
     @Column(name = "update_date")
     private Date updateDate;
 
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "created_by")
+    private String createdBy;
 
-    @Column(name = "user_domain")
-    private String userDomain;
+    @Column(name = "updated_by")
+    private String updatedBy;
 
 
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
     public Date getCreationDate() {
         return creationDate;
@@ -46,19 +53,12 @@ public class BasicEntity {
         this.updateDate = updateDate;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public String getUserDomain() {
-        return userDomain;
-    }
-
-    public void setUserDomain(String userDomain) {
-        this.userDomain = userDomain;
-    }
 }
