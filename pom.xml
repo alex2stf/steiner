@@ -21,7 +21,7 @@
         <queues.implementation>rabbitmq</queues.implementation>
         <queues.version>1.0.7</queues.version>
         <swagger.version>2.9.2</swagger.version>
-        <postgres.version>9.4.1212</postgres.version>
+        <postgres.version>42.2.25</postgres.version>
     </properties>
 
 
